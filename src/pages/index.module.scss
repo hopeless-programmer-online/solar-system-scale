@@ -1,0 +1,12 @@
+svg.map {
+    background-color: black;
+
+    circle {
+        &.star {
+            fill: white;
+        }
+        &.planet {
+            fill: black;
+        }
+    }
+}
