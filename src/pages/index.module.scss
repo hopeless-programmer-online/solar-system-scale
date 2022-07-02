@@ -1,4 +1,6 @@
 svg.map {
+    width: 100%;
+    min-height: 100%;
     background-color: black;
 
     circle {
@@ -8,5 +10,8 @@ svg.map {
         &.planet {
             fill: black;
         }
+    }
+    .ring {
+        fill: black;
     }
 }
