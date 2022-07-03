@@ -49,10 +49,38 @@ export default class IndexPage extends React.Component<Props, State> {
                     />
                     {
                         planets.map((planet, i) => {
-                            const { position : { x, y }, radius, rings } = planet
+                            const { position : { x, y }, radius, obliquity, rings } = planet
 
                             return (
                                 <React.Fragment key={`planet-${i}`}>
+                                    {
+                                        rings && rings.map((ring, j) => {
+                                            const { radius, width } = ring
+                                            const [ min, max ] = rings.reduce(([ min, max ], { width }) => [ Math.min(min, width), Math.max(max, width) ], [ +Infinity, -Infinity ])
+                                            const intensity = mix(200, 0, 1 - (width - min) / (max - min))
+
+                                            return (
+                                                <React.Fragment key={`planet-${i}-ring-${j}-pre`}>
+                                                    <path
+                                                        className={styles.ring}
+                                                        style={{ fill : `rgb(${intensity}, ${intensity}, ${intensity})` }}
+                                                        d={`
+                                                            M ${$x(x - radius)} ${$y(y)}
+                                                            A ${$w(radius)} ${$h(radius)} 0 0 1 ${$x(x + radius)} ${$y(y)}
+                                                            L ${$x(x + radius + width)} ${$y(y)}
+                                                            A ${-$w(radius + width)} ${$h(radius + width)} 0 0 0 ${$x(x - radius - width)} ${$y(y)}
+                                                        `}
+                                                        transform={`
+                                                            translate(${+$x(x)}, ${+$y(y)})
+                                                            rotate(${degrees(-obliquity)})
+                                                            scale(1, 0.1)
+                                                            translate(${-$x(x)}, ${-$y(y)})
+                                                        `}
+                                                    />
+                                                </React.Fragment>
+                                            )
+                                        })
+                                    }
                                     <circle
                                         className={styles.planet}
                                         cx={$x(x)}
@@ -62,23 +90,23 @@ export default class IndexPage extends React.Component<Props, State> {
                                     {
                                         rings && rings.map((ring, j) => {
                                             const { radius, width } = ring
+                                            const [ min, max ] = rings.reduce(([ min, max ], { width }) => [ Math.min(min, width), Math.max(max, width) ], [ +Infinity, -Infinity ])
+                                            const intensity = mix(200, 0, 1 - (width - min) / (max - min))
 
                                             return (
-                                                <React.Fragment key={`planet-${i}-ring-${j}`}>
+                                                <React.Fragment key={`planet-${i}-ring-${j}-post`}>
                                                     <path
                                                         className={styles.ring}
+                                                        style={{ fill : `rgb(${intensity}, ${intensity}, ${intensity})` }}
                                                         d={`
-                                                            ${/* M ${$x(x - radius - width)} ${$y(y)} */``}
-                                                            M ${$x(x - radius)} ${$y(y)}
-                                                            A ${$w(radius)} ${$h(radius)} 0 0 1 ${$x(x + radius)} ${$y(y)}
-                                                            L ${$x(x + radius + width)} ${$y(y)}
-                                                            A ${-$w(radius + width)} ${$h(radius + width)} 0 0 0 ${$x(x - radius - width)} ${$y(y)}
+                                                            M ${$x(x - radius - width)} ${$y(y)}
                                                             A ${+$w(radius + width)} ${-$h(radius + width)} 0 0 0 ${$x(x + radius + width)} ${$y(y)}
                                                             L ${$x(x + radius)} ${$y(y)}
                                                             A ${-$w(radius)} ${-$h(radius)} 0 0 1 ${$x(x - radius)} ${$y(y)}
                                                         `}
                                                         transform={`
                                                             translate(${+$x(x)}, ${+$y(y)})
+                                                            rotate(${degrees(-obliquity)})
                                                             scale(1, 0.1)
                                                             translate(${-$x(x)}, ${-$y(y)})
                                                         `}
@@ -124,11 +152,17 @@ type Position = {
     x : number
     y : number
 }
+type Positioned = {
+    position : Position
+}
 type Boundaries = {
     left : number
     right : number
     top : number
     bottom : number
+}
+type Bounded = {
+    boundaries : Boundaries
 }
 
 const system : System = {
@@ -366,8 +400,14 @@ const system : System = {
     ],
 }
 
+function mix(a : number, b : number, i : number) {
+    return a + (b - a) * i
+}
 function radians(degrees : number) {
     return degrees / 180 * Math.PI
+}
+function degrees(radians : number) {
+    return radians / Math.PI * 180
 }
 function place<Something>(something : Something, position : Position) {
     return {
@@ -375,7 +415,7 @@ function place<Something>(something : Something, position : Position) {
         position,
     }
 }
-function findBoundaries<Something extends (Celestial | Planet) & { position : Position }>(something : Something) : Something & { boundaries : Boundaries } {
+function findBoundaries<Something extends (Celestial | Planet) & Positioned>(something : Something) : Something & Bounded {
     let { radius, position : { x, y } } = something
 
     if (`rings` in something && something.rings) {
