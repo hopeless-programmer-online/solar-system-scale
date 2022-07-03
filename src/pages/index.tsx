@@ -117,6 +117,8 @@ type Celestial = {
     radius : number
     /** Mass in kg */
     mass : number
+    /** See [axial tilt](https://en.wikipedia.org/wiki/Axial_tilt) */
+    obliquity : number
 }
 type Position = {
     x : number
@@ -135,38 +137,44 @@ const system : System = {
         symbol : `☉`,
         radius : 696_342,
         mass : 1.9885e30,
+        obliquity : radians(7.25),
     },
     planets : [
         {   name : `Mercury`,
             symbol : `☿`,
             radius : 2_439.7,
             mass : 3.3011e23,
+            obliquity : radians(0.03),
         },
         {   name : `Venus`,
             symbol : `♀`,
             radius : 6_051.8,
             mass : 4.8675e24,
+            obliquity : radians(2.64),
         },
         {   name : `Earth`,
             symbol : `🜨`,
             radius : 6_371.0,
             mass : 5.97237e24,
+            obliquity : radians(23.44),
         },
         {   name : `Mars`,
             symbol : `♂`,
             radius : 3_389.5,
             mass : 6.4171e23,
+            obliquity : radians(25.19),
         },
         {   name : `Jupiter`,
             symbol : `♃`,
             radius : 69_911,
             mass : 1.8982e27,
+            obliquity : radians(3.13),
             rings : [
-                {
-                    name : `Halo Ring`,
-                    radius : 92_000,
-                    width : 30_000,
-                },
+                // {
+                //     name : `Halo Ring`,
+                //     radius : 92_000,
+                //     width : 30_000,
+                // },
                 {
                     name : `Main Ring`,
                     radius : 122_500,
@@ -188,6 +196,7 @@ const system : System = {
             symbol : `♄`,
             radius : 58_232,
             mass : 5.6834e26,
+            obliquity : radians(26.73),
             rings : [
                 {
                     name : `D Ring`,
@@ -250,15 +259,116 @@ const system : System = {
             symbol : `⛢`,
             radius : 25_362,
             mass : 8.6810e25,
+            obliquity : radians(82.23),
+            rings : [
+                {   name : `cc`,
+                    radius : 26_840,
+                    width : 8_000,
+                },
+                {   name : `ζc`,
+                    radius : 34_890,
+                    width : 3_000,
+                },
+                {   name : `1986U2R`,
+                    radius : 37_000,
+                    width : 2_500,
+                },
+                {   name : `ζ`,
+                    radius : 37_850,
+                    width : 3_500,
+                },
+                {   name : `6`,
+                    radius : 41_837,
+                    width : Math.abs((1.6 - 2.2) / 2),
+                },
+                {   name : `5`,
+                    radius : 42_234,
+                    width : Math.abs((1.9 - 4.9) / 2),
+                },
+                {   name : `4`,
+                    radius : 42_570,
+                    width : Math.abs((2.4 - 4.4) / 2),
+                },
+                {   name : `α`,
+                    radius : 44_718,
+                    width : Math.abs((4.8 - 10.0) / 2),
+                },
+                {   name : `β`,
+                    radius : 45_661,
+                    width : Math.abs((6.1 - 11.4) / 2),
+                },
+                {   name : `η`,
+                    radius : 47_175,
+                    width : Math.abs((1.9 - 2.7) / 2),
+                },
+                {   name : `ηc`,
+                    radius : 47_176,
+                    width : 40,
+                },
+                {   name : `γ`,
+                    radius : 47_627,
+                    width : Math.abs((3.6 - 4.7) / 2),
+                },
+                {   name : `δc`,
+                    radius : 48_300,
+                    width : Math.abs((10 - 12) / 2),
+                },
+                {   name : `δ`,
+                    radius : 48_300,
+                    width : Math.abs((4.1 - 6.1) / 2),
+                },
+                {   name : `λ`,
+                    radius : 50_023,
+                    width : Math.abs((1 - 2) / 2),
+                },
+                {   name : `ε`,
+                    radius : 51_149,
+                    width : Math.abs((19.7 - 96.4) / 2),
+                },
+                {   name : `ν`,
+                    radius : 66_100,
+                    width : 3_800,
+                },
+                {   name : `μ`,
+                    radius : 86_000,
+                    width : 17_000,
+                },
+            ],
         },
         {   name : `Neptune`,
             symbol : `♆`,
             radius : 24_622,
             mass : 1.02413e26,
+            obliquity : radians(28.32),
+            rings : [
+                {   name : `Galle (N42)`,
+                    radius : 40_900,
+                    width : 2_000,
+                },
+                {   name : `Le Verrier (N53)`,
+                    radius : 53_200,
+                    width : 113,
+                },
+                {   name : `Lassell`,
+                    radius : 53_200,
+                    width : 4_000,
+                },
+                {   name : `Arago`,
+                    radius : 57_200,
+                    width : 100,
+                },
+                {   name : `Adams (N63)`,
+                    radius : 62_932,
+                    width : Math.abs((15 - 50) / 2),
+                },
+            ],
         },
     ],
 }
 
+function radians(degrees : number) {
+    return degrees / 180 * Math.PI
+}
 function place<Something>(something : Something, position : Position) {
     return {
         ...something,
@@ -297,21 +407,22 @@ function minMaxBoundaries(boundaries : { boundaries : Boundaries }[]) : Boundari
         bottom : -Infinity,
     })
 }
-function arrangePlanets(planets : Planet[], gapFactor = 0.1) {
+function arrangePlanets(planets : Planet[], gapFactor = 0.05) {
+    const planets2 = planets.map(x => place(x, { x : 0, y : 0 })).map(findBoundaries)
     // find max radius (gap depends on it)
-    const max = planets.reduce((max, { radius }) => Math.max(max, radius), -Infinity)
+    const max = planets2.reduce((max, { boundaries : { left, right } }) => Math.max(max, right - left), -Infinity)
     const gap = max * gapFactor
     // find total planets set width (gap included)
-    const width = planets.reduce((width, { radius }) => width + radius * 2, 0) + (planets.length - 1) * gap
+    const width = planets2.reduce((width, { boundaries : { left, right } }) => width + (right - left), 0) + (planets2.length - 1) * gap
 
     let left = -width / 2
 
-    return planets.map((planet, i) => {
-        const { radius } = planet
-        const x = left + radius
+    return planets2.map((planet, i) => {
+        const { boundaries } = planet
+        const x = left + (boundaries.right - boundaries.left) / 2
         const y = 0
 
-        left += radius * 2 + gap
+        left += (boundaries.right - boundaries.left) + gap
 
         return findBoundaries(place(planet, { x, y }))
     })
