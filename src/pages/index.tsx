@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { PropsWithChildren } from 'react'
 import PageComponent from '../components/page'
 import styles from './index.module.scss'
 
@@ -28,12 +28,19 @@ export default class IndexPage extends React.Component<Props, State> {
         scaleX *= scale / width
         scaleY *= scale / height
 
-        const scaleFactor = Math.min(scaleX, scaleY)
-
         const $w = (w : number) => w * scaleX
         const $h = (h : number) => h * scaleY
         const $x = (x : number) => $w(x - left)
         const $y = (y : number) => $h(y - top)
+        const scaleFactor = Math.min(scaleX, scaleY)
+        const $s = (s : number) => s * scaleFactor
+        const $t = {
+            w : $w,
+            h : $h,
+            x : $x,
+            y : $y,
+            s : $s,
+        }
 
         return (
             <PageComponent title={`Solar System Scale`}>
@@ -41,80 +48,14 @@ export default class IndexPage extends React.Component<Props, State> {
                     className={styles.map}
                     viewBox={`0 0 ${scaleX * width} ${scaleY * height}`}
                 >
-                    <circle
-                        className={styles.star}
-                        cx={$x(star.position.x)}
-                        cy={$y(star.position.y)}
-                        r={star.radius * scaleFactor}
-                    />
+                    <StarComponent id={`sun`} star={star} transformation={$t}/>
                     {
                         planets.map((planet, i) => {
                             const { position : { x, y }, radius, obliquity, rings } = planet
 
                             return (
                                 <React.Fragment key={`planet-${i}`}>
-                                    {
-                                        rings && rings.map((ring, j) => {
-                                            const { radius, width } = ring
-                                            const [ min, max ] = rings.reduce(([ min, max ], { width }) => [ Math.min(min, width), Math.max(max, width) ], [ +Infinity, -Infinity ])
-                                            const intensity = mix(200, 0, 1 - (width - min) / (max - min))
-
-                                            return (
-                                                <React.Fragment key={`planet-${i}-ring-${j}-pre`}>
-                                                    <path
-                                                        className={styles.ring}
-                                                        style={{ fill : `rgb(${intensity}, ${intensity}, ${intensity})` }}
-                                                        d={`
-                                                            M ${$x(x - radius)} ${$y(y)}
-                                                            A ${$w(radius)} ${$h(radius)} 0 0 1 ${$x(x + radius)} ${$y(y)}
-                                                            L ${$x(x + radius + width)} ${$y(y)}
-                                                            A ${-$w(radius + width)} ${$h(radius + width)} 0 0 0 ${$x(x - radius - width)} ${$y(y)}
-                                                        `}
-                                                        transform={`
-                                                            translate(${+$x(x)}, ${+$y(y)})
-                                                            rotate(${degrees(-obliquity)})
-                                                            scale(1, 0.1)
-                                                            translate(${-$x(x)}, ${-$y(y)})
-                                                        `}
-                                                    />
-                                                </React.Fragment>
-                                            )
-                                        })
-                                    }
-                                    <circle
-                                        className={styles.planet}
-                                        cx={$x(x)}
-                                        cy={$y(y)}
-                                        r={radius * scaleFactor}
-                                    />
-                                    {
-                                        rings && rings.map((ring, j) => {
-                                            const { radius, width } = ring
-                                            const [ min, max ] = rings.reduce(([ min, max ], { width }) => [ Math.min(min, width), Math.max(max, width) ], [ +Infinity, -Infinity ])
-                                            const intensity = mix(200, 0, 1 - (width - min) / (max - min))
-
-                                            return (
-                                                <React.Fragment key={`planet-${i}-ring-${j}-post`}>
-                                                    <path
-                                                        className={styles.ring}
-                                                        style={{ fill : `rgb(${intensity}, ${intensity}, ${intensity})` }}
-                                                        d={`
-                                                            M ${$x(x - radius - width)} ${$y(y)}
-                                                            A ${+$w(radius + width)} ${-$h(radius + width)} 0 0 0 ${$x(x + radius + width)} ${$y(y)}
-                                                            L ${$x(x + radius)} ${$y(y)}
-                                                            A ${-$w(radius)} ${-$h(radius)} 0 0 1 ${$x(x - radius)} ${$y(y)}
-                                                        `}
-                                                        transform={`
-                                                            translate(${+$x(x)}, ${+$y(y)})
-                                                            rotate(${degrees(-obliquity)})
-                                                            scale(1, 0.1)
-                                                            translate(${-$x(x)}, ${-$y(y)})
-                                                        `}
-                                                    />
-                                                </React.Fragment>
-                                            )
-                                        })
-                                    }
+                                    <PlanetComponent planet={planet} transformation={$t}/>
                                 </React.Fragment>
                             )
                         })
@@ -163,6 +104,152 @@ type Boundaries = {
 }
 type Bounded = {
     boundaries : Boundaries
+}
+type Transformation = {
+    w : (w : number) => number
+    h : (h : number) => number
+    x : (x : number) => number
+    y : (y : number) => number
+    s : (s : number) => number
+}
+
+class StarComponent extends React.Component<{ id : string, star : Star & Positioned, transformation : Transformation }, {}> {
+    public render() {
+        const {
+            id,
+            star : { position : { x, y }, radius : r, obliquity : a },
+            transformation : t,
+        } = this.props
+        const body = (
+            <circle
+                className={styles.planet}
+                cx={0} cy={0}
+                r={t.s(r)}
+            />
+        )
+
+        return (
+            <>
+                <mask id={`${id}-mask`}>
+                </mask>
+                <g
+                    transform={`
+                        translate(${t.x(x)}, ${t.y(y)})
+                        rotate(${-degrees(a)})
+                    `}
+                >
+                    <circle
+                        className={styles.star}
+                        cx={0}
+                        cy={0}
+                        r={t.s(r)}
+                    />
+                </g>
+            </>
+        )
+    }
+}
+class PlanetComponent extends React.Component<{ planet : Planet & Positioned, transformation : Transformation }, {}> {
+    public render() {
+        const {
+            planet : { position : { x, y }, radius : r, obliquity : a, rings },
+            transformation : t,
+        } = this.props
+        const body = (
+            <circle
+                className={styles.planet}
+                cx={0} cy={0}
+                r={t.s(r)}
+            />
+        )
+
+        return (
+            <>
+                <g
+                    transform={`
+                        translate(${t.x(x)}, ${t.y(y)})
+                        rotate(${-degrees(a)})
+                    `}
+                >
+                    {
+                        rings ? (
+                            <RingsComponent rings={rings} transformation={t}>
+                                {body}
+                            </RingsComponent>
+                        ) : body
+                    }
+                </g>
+            </>
+        )
+    }
+}
+class RingsComponent extends React.Component<PropsWithChildren<{ rings : Ring[], transformation : Transformation }>, {}> {
+    public render() {
+        const { props, props : { transformation : t, children } } = this
+        const [ min, max ] = props.rings.reduce(([ min, max ], { width }) => [ Math.min(min, width), Math.max(max, width) ], [ +Infinity, -Infinity ])
+        const rings = props.rings.map(ring => {
+            const { width } = ring
+            const q = ((width - min) / (max - min))**(1/2)
+            const intensity = mix(1, 0.05, q)
+
+            return {
+                ...ring,
+                intensity,
+            }
+        })
+
+        return (
+            <>
+                {
+                    rings.map((ring, i) => {
+                        const { radius, width, intensity } = ring
+
+                        return (
+                            <React.Fragment key={`ring-${i}-pre`}>
+                                <path
+                                    className={styles.ring}
+                                    style={{ fill : `rgb(0, 0, 0, ${intensity})` }}
+                                    d={`
+                                        M ${t.w(-radius)} ${t.h(0)}
+                                        A ${t.w(+radius)} ${t.h(+radius)} 0 0 1 ${t.w(+radius)} ${t.h(0)}
+                                        L ${t.w(+radius + width)} ${t.h(0)}
+                                        A ${t.w(-radius - width)} ${t.h(+radius + width)} 0 0 0 ${t.w(-radius - width)} ${t.h(0)}
+                                    `}
+                                    transform={`
+                                        scale(1, 0.1)
+                                    `}
+                                />
+                            </React.Fragment>
+                        )
+                    })
+                }
+                {children}
+                {
+                    rings.map((ring, i) => {
+                        const { radius, width, intensity } = ring
+
+                        return (
+                            <React.Fragment key={`ring-${i}-post`}>
+                                <path
+                                    className={styles.ring}
+                                    style={{ fill : `rgb(0, 0, 0, ${intensity})` }}
+                                    d={`
+                                        M ${t.w(-radius - width)} ${t.h(0)}
+                                        A ${t.w(+radius + width)} ${t.h(-radius - width)} 0 0 0 ${t.w(+radius + width)} ${t.h(0)}
+                                        L ${t.w(+radius)} ${t.h(0)}
+                                        A ${t.w(-radius)} ${t.h(-radius)} 0 0 1 ${t.w(-radius)} ${t.h(0)}
+                                    `}
+                                    transform={`
+                                        scale(1, 0.1)
+                                    `}
+                                />
+                            </React.Fragment>
+                        )
+                    })
+                }
+            </>
+        )
+    }
 }
 
 const system : System = {
@@ -282,11 +369,11 @@ const system : System = {
                     radius : 211_000,
                     width : 2_500,
                 },
-                // {
-                //     name : `E Ring`,
-                //     radius : 180_000,
-                //     width : 300_000,
-                // },
+                {
+                    name : `E Ring`,
+                    radius : 180_000,
+                    width : 300_000,
+                },
             ],
         },
         {   name : `Uranus`,
