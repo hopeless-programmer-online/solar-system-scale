@@ -73,7 +73,9 @@ type System = {
 type Star = Celestial
 type Planet = Celestial & {
     rings? : Ring[]
+    moons? : Moon[]
 }
+type Moon = Celestial
 type Ring = {
     name : string
     radius : number
@@ -152,15 +154,25 @@ class StarComponent extends React.Component<{ id : string, star : Star & Positio
 class PlanetComponent extends React.Component<{ planet : Planet & Positioned, transformation : Transformation }, {}> {
     public render() {
         const {
-            planet : { position : { x, y }, radius : r, obliquity : a, rings },
+            planet : { name, symbol, position : { x, y }, radius : r, obliquity : a, moons, rings },
             transformation : t,
         } = this.props
         const body = (
-            <circle
-                className={styles.planet}
-                cx={0} cy={0}
-                r={t.s(r)}
-            />
+            <>
+                <circle
+                    className={styles.planet}
+                    cx={0} cy={0}
+                    r={t.s(r)}
+                />
+                {/* <text
+                    className={styles.symbol}
+                    style={{ fontSize : `${t.s(r)}px` }}
+                    x={0}
+                    y={0}
+                >
+                    {symbol}
+                </text> */}
+            </>
         )
 
         return (
@@ -179,6 +191,25 @@ class PlanetComponent extends React.Component<{ planet : Planet & Positioned, tr
                         ) : body
                     }
                 </g>
+                <text
+                    className={styles.name}
+                    style={{ fontSize : `${t.s(r / 2)}px` }}
+                    x={t.x(x)}
+                    y={t.y(y + r)}
+                >
+                    {name}
+                </text>
+                {/* {
+                    moons && moons.map((moon, i) => {
+                        const { position : { x, y} } = moon
+
+                        return (
+                            <circle
+                                cx={t.x()}
+                            />
+                        )
+                    })
+                } */}
             </>
         )
     }
@@ -278,6 +309,14 @@ const system : System = {
             radius : 6_371.0,
             mass : 5.97237e24,
             obliquity : radians(23.44),
+            moons : [
+                {   name : `Moon`,
+                    symbol : `☾`,
+                    radius : 1_737.4,
+                    mass : 7.342e22,
+                    obliquity : radians(6.687),
+                },
+            ],
         },
         {   name : `Mars`,
             symbol : `♂`,
@@ -291,11 +330,11 @@ const system : System = {
             mass : 1.8982e27,
             obliquity : radians(3.13),
             rings : [
-                // {
-                //     name : `Halo Ring`,
-                //     radius : 92_000,
-                //     width : 30_000,
-                // },
+                {
+                    name : `Halo Ring`,
+                    radius : 92_000,
+                    width : 30_000,
+                },
                 {
                     name : `Main Ring`,
                     radius : 122_500,
@@ -369,11 +408,11 @@ const system : System = {
                     radius : 211_000,
                     width : 2_500,
                 },
-                {
-                    name : `E Ring`,
-                    radius : 180_000,
-                    width : 300_000,
-                },
+                // {
+                //     name : `E Ring`,
+                //     radius : 180_000,
+                //     width : 300_000,
+                // },
             ],
         },
         {   name : `Uranus`,

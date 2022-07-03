@@ -11,7 +11,22 @@ svg.map {
             fill: black;
         }
     }
-    .ring {
+    p.ring {
         fill: black;
+    }
+    text {
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        text-transform: uppercase;
+        font-weight: bold;
+        text-anchor: middle;
+
+        &.symbol {
+            dominant-baseline: central;
+            fill: white;
+        }
+        &.name {
+            dominant-baseline: text-before-edge;
+            fill: black;
+        }
     }
 }
