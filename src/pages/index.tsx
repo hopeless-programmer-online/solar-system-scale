@@ -151,10 +151,10 @@ class StarComponent extends React.Component<{ id : string, star : Star & Positio
         )
     }
 }
-class PlanetComponent extends React.Component<{ planet : Planet & Positioned, transformation : Transformation }, {}> {
+class PlanetComponent extends React.Component<{ planet : Planet & Positioned & Bounded, transformation : Transformation }, {}> {
     public render() {
         const {
-            planet : { name, symbol, position : { x, y }, radius : r, obliquity : a, moons, rings },
+            planet : { name, symbol, position : { x, y }, boundaries, radius : r, obliquity : a, moons, rings },
             transformation : t,
         } = this.props
         const body = (
@@ -191,6 +191,13 @@ class PlanetComponent extends React.Component<{ planet : Planet & Positioned, tr
                         ) : body
                     }
                 </g>
+                {/* <rect
+                    style={{ fill : `red` }}
+                    x={t.x(boundaries.left)}
+                    y={t.y(boundaries.top)}
+                    width={t.w(boundaries.right - boundaries.left)}
+                    height={t.h(boundaries.bottom - boundaries.top)}
+                /> */}
                 <text
                     className={styles.name}
                     style={{ fontSize : `${t.s(r / 2)}px` }}
@@ -542,21 +549,31 @@ function place<Something>(something : Something, position : Position) {
     }
 }
 function findBoundaries<Something extends (Celestial | Planet) & Positioned>(something : Something) : Something & Bounded {
-    let { radius, position : { x, y } } = something
+    let { radius, position : { x, y }, obliquity : a } = something
 
-    if (`rings` in something && something.rings) {
-        for (const ring of something.rings) {
-            if (ring.radius + ring.width > radius) radius = ring.radius + ring.width
-        }
+    let width = radius
+    let height = radius
+
+    if (`rings` in something && something.rings) for (const ring of something.rings) {
+        const ringWidth = ring.radius + ring.width
+
+        if (ringWidth > width) width = ringWidth
     }
+
+    const w = { x : +Math.cos(a) * width, y : -Math.sin(a) * width }
+    const h = { x : +Math.sin(a) * height, y : +Math.cos(a) * height }
+    const lt = { x : -w.x -h.x, y : -w.y -h.y }
+    const lb = { x : -w.x +h.x, y : -w.y +h.y }
+    const rt = { x : +w.x -h.x, y : +w.y -h.y }
+    const rb = { x : +w.x +h.x, y : +w.y +h.y }
 
     return {
         ...something,
         boundaries : {
-            left : x - radius,
-            right : x + radius,
-            top : y - radius,
-            bottom : y + radius,
+            left   : x + Math.min(lt.x, lb.x, rt.x, rb.x),
+            right  : x + Math.max(lt.x, lb.x, rt.x, rb.x),
+            top    : y + Math.min(lt.y, lb.y, rt.y, rb.y),
+            bottom : y + Math.max(lt.y, lb.y, rt.y, rb.y),
         },
     }
 }
