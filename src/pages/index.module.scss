@@ -1,6 +1,6 @@
 svg.map {
-    width: 100%;
-    min-height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
     background-color: black;
 
     circle {
@@ -25,6 +25,11 @@ svg.map {
             fill: white;
         }
         &.name {
+            dominant-baseline: text-before-edge;
+            fill: black;
+        }
+        &.moonName {
+            text-anchor: start;
             dominant-baseline: text-before-edge;
             fill: black;
         }

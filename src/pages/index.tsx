@@ -8,7 +8,7 @@ export type State = unknown
 export default class IndexPage extends React.Component<Props, State> {
     private system = {
         star : findBoundaries(place(system.star, { x : 0, y : 0 })),
-        planets : arrangePlanets(system.planets),
+        planets : arrangeLeftToRight(system.planets),
     }
 
     public render() {
@@ -154,7 +154,7 @@ class StarComponent extends React.Component<{ id : string, star : Star & Positio
 class PlanetComponent extends React.Component<{ planet : Planet & Positioned & Bounded, transformation : Transformation }, {}> {
     public render() {
         const {
-            planet : { name, symbol, position : { x, y }, boundaries, radius : r, obliquity : a, moons, rings },
+            planet, planet : { name, symbol, position : { x, y }, boundaries, radius : r, obliquity : a, moons, rings },
             transformation : t,
         } = this.props
         const body = (
@@ -174,6 +174,7 @@ class PlanetComponent extends React.Component<{ planet : Planet & Positioned & B
                 </text> */}
             </>
         )
+        const arrangedMoons = moons && arrangeTopToBottom(moons, { x, y : boundaries.bottom + planet.radius / 2 })
 
         return (
             <>
@@ -206,17 +207,29 @@ class PlanetComponent extends React.Component<{ planet : Planet & Positioned & B
                 >
                     {name}
                 </text>
-                {/* {
-                    moons && moons.map((moon, i) => {
-                        const { position : { x, y} } = moon
+                {
+                    arrangedMoons && arrangedMoons.map((moon, i) => {
+                        const { name, position : { x, y }, radius : r } = moon
 
                         return (
-                            <circle
-                                cx={t.x()}
-                            />
+                            <React.Fragment key={`moon-${i}`}>
+                                <circle
+                                    cx={t.x(x)}
+                                    cy={t.y(y)}
+                                    r={t.s(r)}
+                                />
+                                <text
+                                    className={styles.moonName}
+                                    style={{ fontSize : `${t.s(r / 1)}px` }}
+                                    x={t.x(x + r * 1.1)}
+                                    y={t.y(y)}
+                                >
+                                    {name}
+                                </text>
+                            </React.Fragment>
                         )
                     })
-                } */}
+                }
             </>
         )
     }
@@ -294,12 +307,12 @@ const system : System = {
     star : {
         name : `Sun`,
         symbol : `☉`,
-        radius : 696_342,
+        radius : 200_000, // 696_342,
         mass : 1.9885e30,
         obliquity : radians(7.25),
     },
     planets : [
-        {   name : `Mercury`,
+        /* {   name : `Mercury`,
             symbol : `☿`,
             radius : 2_439.7,
             mass : 3.3011e23,
@@ -330,7 +343,19 @@ const system : System = {
             radius : 3_389.5,
             mass : 6.4171e23,
             obliquity : radians(25.19),
-        },
+            moons : [
+                {   name : `Phobos`,
+                    radius : 22.2,
+                    mass : 10.8e15,
+                    obliquity : radians(0),
+                },
+                {   name : `Deimos`,
+                    radius : 12.6,
+                    mass : 1.5e15,
+                    obliquity : radians(0),
+                },
+            ],
+        }, */
         {   name : `Jupiter`,
             symbol : `♃`,
             radius : 69_911,
@@ -358,8 +383,410 @@ const system : System = {
                 //     width : 97_000,
                 // },
             ],
+            moons : [
+                {   name : `Metis`,
+                    radius : 43,
+                    mass : 3.6e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Adrastea`,
+                    radius : 16,
+                    mass : 40.20e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Amalthea`,
+                    radius : 167,
+                    mass : 208e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Thebe`,
+                    radius : 98,
+                    mass : 643e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Io`,
+                    radius : 3643,
+                    mass : 28_931_900e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Europa`,
+                    radius : 3121,
+                    mass : 64_799_800e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Ganymede`,
+                    radius : 5268,
+                    mass : 214_819_000e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Callisto`,
+                    radius : 4820,
+                    mass : 610_759_000e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Themisto`,
+                    radius : 9,
+                    mass : 0.038e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Leda`,
+                    radius : 21,
+                    mass : 50.52e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Ersa`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Himalia`,
+                    radius : 139,
+                    mass : 6_420e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Pandia`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Lysithea`,
+                    radius : 42,
+                    mass : 23.9e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Elara`,
+                    radius : 79,
+                    mass : 927e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Dia`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Carpo`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Valetudo`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Euporie`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 18`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Eupheme`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2010 J 2`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2016 J 1`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Mneme`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Euanthe`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 16`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Harpalyke`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Orthosie`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Helike`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Praxidike`,
+                    radius : 7,
+                    mass : 0.018e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 3`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 12`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 7`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Thelxinoe`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Thyone`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 2`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Ananke`,
+                    radius : 29.1,
+                    mass : 1.3e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Iocaste`,
+                    radius : 5,
+                    mass : 0.0065e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Hermippe`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 9`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Philophrosyne`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Pasithee`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 8`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 24`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Eurydome`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2011 J 2`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 4`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Chaldene`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 2`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Isonoe`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Kallichore`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Erinome`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Kale`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Eirene`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Aitne`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Eukelade`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Arche`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Taygete`,
+                    radius : 5,
+                    mass : 0.0065e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2011 J 1`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Carme`,
+                    radius : 46.7,
+                    mass : 5.3e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Herse`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 19`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2010 J 1`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 9`,
+                    radius : 1,
+                    mass : 0.000052e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 5`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 6`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Kalyke 6`,
+                    radius : 9,
+                    mass : 0.017e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Hegemone`,
+                    radius : 3,
+                    mass : 0.0014e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Pasiphae`,
+                    radius : 57.8,
+                    mass : 10e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Sponde`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 10`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Megaclite`,
+                    radius : 5,
+                    mass : 0.0065e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Cyllene`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Sinope`,
+                    radius : 35,
+                    mass : 2.2e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2017 J 1`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Aoede`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Autonoe`,
+                    radius : 4,
+                    mass : 0.0034e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Callirrhoe 9`,
+                    radius : 6,
+                    mass : 0.046e16,
+                    obliquity : radians(0),
+                },
+                {   name : `S/2003 J 23`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+                {   name : `Kore`,
+                    radius : 2,
+                    mass : 0.00042e16,
+                    obliquity : radians(0),
+                },
+            ],
         },
-        {   name : `Saturn`,
+        /* {   name : `Saturn`,
             symbol : `♄`,
             radius : 58_232,
             mass : 5.6834e26,
@@ -529,7 +956,7 @@ const system : System = {
                     width : Math.abs((15 - 50) / 2),
                 },
             ],
-        },
+        }, */
     ],
 }
 
@@ -590,22 +1017,48 @@ function minMaxBoundaries(boundaries : { boundaries : Boundaries }[]) : Boundari
         bottom : -Infinity,
     })
 }
-function arrangePlanets(planets : Planet[], gapFactor = 0.05) {
-    const planets2 = planets.map(x => place(x, { x : 0, y : 0 })).map(findBoundaries)
+function arrangeLeftToRight<Something extends Celestial | Planet>(somethings : Something[], gapFactor = 0.05) {
+    const bounded = somethings.map(x => place(x, { x : 0, y : 0 })).map(findBoundaries)
     // find max radius (gap depends on it)
-    const max = planets2.reduce((max, { boundaries : { left, right } }) => Math.max(max, right - left), -Infinity)
+    const max = bounded.reduce((max, { boundaries : { left, right } }) => Math.max(max, right - left), -Infinity)
     const gap = max * gapFactor
     // find total planets set width (gap included)
-    const width = planets2.reduce((width, { boundaries : { left, right } }) => width + (right - left), 0) + (planets2.length - 1) * gap
+    const width = bounded.reduce((width, { boundaries : { left, right } }) => width + (right - left), 0) + (bounded.length - 1) * gap
 
     let left = -width / 2
 
-    return planets2.map((planet, i) => {
+    return bounded.map((planet, i) => {
         const { boundaries } = planet
-        const x = left + (boundaries.right - boundaries.left) / 2
+        const width = boundaries.right - boundaries.left
+        const x = left + width / 2
         const y = 0
 
-        left += (boundaries.right - boundaries.left) + gap
+        left += width + gap
+
+        return findBoundaries(place(planet, { x, y }))
+    })
+}
+function arrangeTopToBottom<Something extends Celestial | Planet>(
+    somethings : Something[],
+    offset : Position = { x : 0, y : 0 },
+    gapFactor = 0.05
+) {
+    const bounded = somethings.map(x => place(x, { x : 0, y : 0 })).map(findBoundaries)
+    // find max radius (gap depends on it)
+    const max = bounded.reduce((max, { boundaries : { top, bottom } }) => Math.max(max, bottom - top), -Infinity)
+    const gap = max * gapFactor
+    // find total planets set height (gap included)
+    const height = bounded.reduce((height, { boundaries : { top, bottom } }) => height + (bottom - top), 0) + (bounded.length - 1) * gap
+
+    let top = 0
+
+    return bounded.map((planet, i) => {
+        const { boundaries } = planet
+        const height = boundaries.bottom - boundaries.top
+        const x = offset.x + 0
+        const y = offset.y + top + height / 2
+
+        top += height + gap
 
         return findBoundaries(place(planet, { x, y }))
     })
