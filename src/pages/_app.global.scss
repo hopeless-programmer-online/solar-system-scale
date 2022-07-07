@@ -1,16 +1,21 @@
 html {
+    min-width: 100%;
     min-height: 100%;
+    display: flex;
+    justify-content: stretch;
+    align-items: stretch;
 
     > body {
         margin: 0;
-        height: 100%;
+        display: flex;
+        justify-content: stretch;
+        align-items: stretch;
 
         > div#__next {
             display: flex;
             flex-direction: column;
             justify-content: stretch;
             align-items: stretch;
-            height: 100%;
         }
     }
 }

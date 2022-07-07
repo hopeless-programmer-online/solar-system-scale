@@ -3,15 +3,97 @@ import PageComponent from '../components/page'
 import styles from './index.module.scss'
 
 export type Props = unknown
-export type State = unknown
+export type State = {
+    view : {
+        left : number
+        top : number
+        width : number
+        height : number
+    }
+}
 
 export default class IndexPage extends React.Component<Props, State> {
+    public state : State = {
+        view : {
+            left : 0,
+            top : 0,
+            width : 100,
+            height : 100,
+        },
+    }
+
     private system = {
         star : findBoundaries(place(system.star, { x : 0, y : 0 })),
         planets : arrangeLeftToRight(system.planets),
     }
 
+    private handleMouseDown = (event : React.MouseEvent<SVGSVGElement>) => {
+        const { view : v } = this.state
+        const vwh = v.width / v.height
+        const { left : rl, top : rt, width : rw, height : rh } = event.currentTarget.getBoundingClientRect()
+        const rwh = rw / rh
+
+        const $t = ({ clientX, clientY } : { clientX : number, clientY : number }) => {
+            if (rwh >= vwh) {
+                const q = (rwh - vwh) / 2 / rwh
+
+                const w = rw * (vwh / rwh)
+                const l = rl + rw * q
+                const x = (clientX - l) / w * v.width + v.left
+
+                const h = rh
+                const t = rt
+                const y = (clientY - t) / h * v.height + v.top
+
+                return { x, y }
+            }
+            else {
+                const q = (1 / rwh - 1 / vwh) / 2 / (1 / rwh)
+
+                console.log(q)
+
+                const w = rw
+                const l = rl
+                const x = (clientX - l) / w * v.width + v.left
+
+                const h = rh * ((1 / vwh) / (1 / rwh))
+                const t = rt + rh * q
+                const y = (clientY - t) / h * v.height + v.top
+
+                return { x, y }
+            }
+        }
+
+        let { x : ox, y : oy } = $t(event)
+
+        const handleMouseUp = () => {
+            window.removeEventListener(`mouseup`, handleMouseUp)
+            window.removeEventListener(`mousemove`, handleMouseMove)
+        }
+        const handleMouseMove = (event : MouseEvent) => {
+            const { x : nx, y : ny } = $t(event)
+            const dx = nx - ox
+            const dy = ny - oy
+            const { view : v } = this.state
+
+            this.setState({ view : {
+                ...v,
+                left : v.left - dx,
+                top : v.top - dy,
+            } })
+
+            // console.log({ dx, dy })
+
+            ox = nx
+            oy = ny
+        }
+
+        window.addEventListener(`mouseup`, handleMouseUp)
+        window.addEventListener(`mousemove`, handleMouseMove)
+    }
+
     public render() {
+        const { view } = this.state
         const { star, planets } = this.system
         const boundaries = minMaxBoundaries([ star, ...planets ])
         const scale = 100
@@ -46,7 +128,9 @@ export default class IndexPage extends React.Component<Props, State> {
             <PageComponent title={`Solar System Scale`}>
                 <svg
                     className={styles.map}
-                    viewBox={`0 0 ${scaleX * width} ${scaleY * height}`}
+                    viewBox={`${view.left} ${view.top} ${scaleX * width} ${scaleY * height}`}
+                    onMouseDown={this.handleMouseDown}
+                    preserveAspectRatio={`xMidYMid meet`}
                 >
                     <StarComponent id={`sun`} star={star} transformation={$t}/>
                     {
