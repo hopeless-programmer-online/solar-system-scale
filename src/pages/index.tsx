@@ -1,5 +1,6 @@
 import React, { PropsWithChildren } from 'react'
 import PageComponent from '../components/page'
+import SvgView from '../components/svg-view'
 import system, { Celestial, Planet, Ring, Star } from '../data/system'
 import styles from './index.module.scss'
 
@@ -130,11 +131,11 @@ export default class IndexPage extends React.Component<Props, State> {
 
         return (
             <PageComponent title={`Solar System Scale`}>
-                <svg
+                <SvgView
                     className={styles.map}
                     viewBox={`${view.left} ${view.top} ${scaleX * width} ${scaleY * height}`}
-                    onMouseDown={this.handleMouseDown}
-                    onWheel={this.handleWheel}
+                    // onMouseDown={this.handleMouseDown}
+                    // onWheel={this.handleWheel}
                     preserveAspectRatio={`xMidYMid meet`}
                 >
                     <StarComponent id={`sun`} star={star} transformation={$t}/>
@@ -149,7 +150,7 @@ export default class IndexPage extends React.Component<Props, State> {
                             )
                         })
                     }
-                </svg>
+                </SvgView>
             </PageComponent>
         )
     }
