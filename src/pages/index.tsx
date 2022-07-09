@@ -92,6 +92,9 @@ export default class IndexPage extends React.Component<Props, State> {
         window.addEventListener(`mouseup`, handleMouseUp)
         window.addEventListener(`mousemove`, handleMouseMove)
     }
+    private handleWheel = (event : React.WheelEvent<SVGSVGElement>) => {
+        //
+    }
 
     public render() {
         const { view } = this.state
@@ -131,6 +134,7 @@ export default class IndexPage extends React.Component<Props, State> {
                     className={styles.map}
                     viewBox={`${view.left} ${view.top} ${scaleX * width} ${scaleY * height}`}
                     onMouseDown={this.handleMouseDown}
+                    onWheel={this.handleWheel}
                     preserveAspectRatio={`xMidYMid meet`}
                 >
                     <StarComponent id={`sun`} star={star} transformation={$t}/>
