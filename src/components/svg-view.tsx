@@ -27,8 +27,6 @@ export default class SvgView extends React.Component<Props, State> {
             const dx = nx - ox
             const dy = ny - oy
 
-            console.log([ ox, oy, dx, dy ])
-
             const { left, top, width, height } = this.state.view
 
             this.setState({ view : {
@@ -38,8 +36,8 @@ export default class SvgView extends React.Component<Props, State> {
                 height,
             } })
 
-            ox = nx
-            oy = ny
+            ox = nx - dx
+            oy = ny - dy
         }
 
         window.addEventListener(`mouseup`, handleMouseUp)
@@ -64,7 +62,6 @@ export default class SvgView extends React.Component<Props, State> {
                 viewBox={`${left} ${top} ${width} ${height}`}
                 onMouseDown={this.handleMouseDown}
             >
-                <rect x={left} y={top} width={width} height={height} style={{ fill : `red` }}/>
                 {this.props.children}
             </svg>
         )
