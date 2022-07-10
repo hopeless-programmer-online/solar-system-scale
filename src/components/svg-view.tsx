@@ -7,23 +7,15 @@ export default class SvgView extends React.Component<Props, State> {
 
     private handleMouseDown = (event : React.MouseEvent<SVGSVGElement>) => {
         const svg = event.currentTarget
-        const toView = ({ clientX, clientY } : { clientX : number, clientY : number }) => {
-            const { view } = this.state
-            const client = viewToClient(svg, view)
-            const x = (clientX - client.left) / client.width * view.width + view.left
-            const y = (clientY - client.top) / client.height * view.height + view.top
 
-            return { x, y }
-        }
-
-        let { x : ox, y : oy } = toView(event)
+        let { x : ox, y : oy } = clientToView(event, svg, this.state.view)
 
         const handleMouseUp = () => {
             window.removeEventListener(`mouseup`, handleMouseUp)
             window.removeEventListener(`mousemove`, handleMouseMove)
         }
         const handleMouseMove = (event : MouseEvent) => {
-            const { x : nx, y : ny } = toView(event)
+            const { x : nx, y : ny } = clientToView(event, svg, this.state.view)
             const dx = nx - ox
             const dy = ny - oy
 
@@ -47,6 +39,29 @@ export default class SvgView extends React.Component<Props, State> {
 
         if (onMouseDown) onMouseDown(event)
     }
+    private handleWheel = (event : React.WheelEvent<SVGSVGElement>) => {
+        const svg = event.currentTarget
+        const { view } = this.state
+        const { x, y } = clientToView(event, svg, view)
+
+        const q = 2**Math.sign(event.deltaY)
+        const { left : ol, top : ot, width : ow, height : oh } = view
+        const nw =  ow * q
+        const nh =  oh * q
+        // (x - ol) / ow = (x - nl) / nw -> nl = x - (x - ol) / ow * nw
+        // (y - ot) / oh = (y - nt) / nh -> nt = y - (y - ot) / oh * nh
+        const nl = x - (x - ol) / ow * nw
+        const nt = y - (y - ot) / oh * nh
+
+        this.setState({
+            view : {
+                left :  nl,
+                top : nt,
+                width : nw,
+                height : nh,
+            },
+        })
+    }
 
     // @todo: componentDidUpdate
     public render() {
@@ -61,6 +76,7 @@ export default class SvgView extends React.Component<Props, State> {
                 {...props}
                 viewBox={`${left} ${top} ${width} ${height}`}
                 onMouseDown={this.handleMouseDown}
+                onWheel={this.handleWheel}
             >
                 {this.props.children}
             </svg>
@@ -109,4 +125,11 @@ function viewToClient(svg : SVGSVGElement, view : Rect) {
     }
 
     return { left, top, width, height }
+}
+const clientToView = ({ clientX, clientY } : { clientX : number, clientY : number }, svg : SVGSVGElement, view : Rect) => {
+    const client = viewToClient(svg, view)
+    const x = (clientX - client.left) / client.width * view.width + view.left
+    const y = (clientY - client.top) / client.height * view.height + view.top
+
+    return { x, y }
 }

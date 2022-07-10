@@ -547,6 +547,429 @@ export const saturn = {
         //     width : 300_000,
         // },
     ],
+    moons : [
+        // {
+        //     name: `S/2009 S 1`,
+        //     radius: 0.30,
+        //     mass: 0.00000001e15,
+        // },
+        // {
+        //     name: `(moonlets)`,
+        //     radius: (0.04 + 0.4) / 2,
+        //     mass: 0.00000002e15,
+        // },
+        // {
+        //     name: `Pan`,
+        //     radius: 28.2,
+        //     mass: 5.0e15,
+        // },
+        // {
+        //     name: `Daphnis`,
+        //     radius: 7.6,
+        //     mass: 0.077e15,
+        // },
+        // {
+        //     name: `Atlas`,
+        //     radius: 30.2,
+        //     mass: 6.6e15,
+        // },
+        // {
+        //     name: `Prometheus`,
+        //     radius: 86.2,
+        //     mass: 159.5e15,
+        // },
+        // {
+        //     name: `Pandora`,
+        //     radius: 81.4,
+        //     mass: 137.1e15,
+        // },
+        // {
+        //     name: `Epimetheus`,
+        //     radius: 116.2,
+        //     mass: 526.6e15,
+        // },
+        // {
+        //     name: `Janus`,
+        //     radius: 179.0,
+        //     mass: 1897.5e15,
+        // },
+        // {
+        //     name: `Aegaeon`,
+        //     radius: 0.66,
+        //     mass: 0.000073e15,
+        // },
+        // {
+        //     name: `Mimas`,
+        //     radius: 396.4,
+        //     mass: 37_493e15,
+        // },
+        // {
+        //     name: `Methone`,
+        //     radius: 2.9,
+        //     mass: 0.0063e15,
+        // },
+        // {
+        //     name: `Anthe`,
+        //     radius: 1.0,
+        //     mass: 0.00026e15,
+        // },
+        // {
+        //     name: `Pallene`,
+        //     radius: 4.4,
+        //     mass: 0.023e15,
+        // },
+        // {
+        //     name: `Enceladus`,
+        //     radius: 504.2,
+        //     mass: 108_022e15,
+        // },
+        // {
+        //     name: `Tethys`,
+        //     radius: 1062.2,
+        //     mass: 617_449e15,
+        // },
+        // {
+        //     name: `Telesto`,
+        //     radius: 24.8,
+        //     mass: 4.0e15,
+        // },
+        // {
+        //     name: `Calypso`,
+        //     radius: 21.4,
+        //     mass: 2.5e15,
+        // },
+        // {
+        //     name: `Dione`,
+        //     radius: 1122.8,
+        //     mass: 1_095_452e15,
+        // },
+        // {
+        //     name: `Helene`,
+        //     radius: 35.2,
+        //     mass: 7.2e15,
+        // },
+        // {
+        //     name: `Polydeuces`,
+        //     radius: 2.6,
+        //     mass: 0.0038e15,
+        // },
+        // {
+        //     name: `Rhea`,
+        //     radius: 1527.6,
+        //     mass: 2_306_518e15,
+        // },
+        {
+            name: `Titan`,
+            radius: 5149.46,
+            mass: 134_520_000e15,
+            obliquity : radians(0),
+        },
+        // {
+        //     name: `Hyperion`,
+        //     radius: 270.0,
+        //     mass: 5_619.9e15,
+        // },
+        // {
+        //     name: `Iapetus`,
+        //     radius: 1468.6,
+        //     mass: 1_805_635e15,
+        // },
+        // {
+        //     name: `S/2019 S 1`,
+        //     radius: 6,
+        //     mass: 0.11e15,
+        // },
+        // {
+        //     name: `Kiviuq`,
+        //     radius: 17,
+        //     mass: 2.6e15,
+        // },
+        // {
+        //     name: `Ijiraq`,
+        //     radius: 13,
+        //     mass: 1.2e15,
+        // },
+        // {
+        //     name: `Phoebe`,
+        //     radius: 213.0,
+        //     mass: 8_292.0e15,
+        // },
+        // {
+        //     name: `Paaliaq`,
+        //     radius: 25,
+        //     mass: 8.2e15,
+        // },
+        // {
+        //     name: `Skathi`,
+        //     radius: 8,
+        //     mass: 0.27e15,
+        // },
+        // {
+        //     name: `S/2004 S 37`,
+        //     radius: 4,
+        //     mass: 0.034e15,
+        // },
+        // {
+        //     name: 'â\x99¦Albiorix',
+        //     radius: '28.6',
+        //     mass: 'â\x89\x88â\x80\x8912.2'
+        // },
+        // {
+        //     name: 'â\x99£S/2007 S\n                        2',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x80¡S/2004 S 29',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99¦Bebhionn',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x80¡S/2004 S\n                        31',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99¦Erriapus',
+        //     radius: 'â\x89\x88â\x80\x8910',
+        //     mass: 'â\x89\x88â\x80\x890.52'
+        // },
+        // {
+        //     name: 'â\x99£Skoll',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x80¡Tarqeq',
+        //     radius: 'â\x89\x88â\x80\x897',
+        //     mass: 'â\x89\x88â\x80\x890.18'
+        // },
+        // {
+        //     name: 'â\x80¡Siarnaq',
+        //     radius: '39.3',
+        //     mass: 'â\x89\x88â\x80\x8931.8'
+        // },
+        // {
+        //     name: 'â\x99¦Tarvos',
+        //     radius: 'â\x89\x88â\x80\x8915',
+        //     mass: 'â\x89\x88â\x80\x891.8'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        13',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£Hyrrokkin',
+        //     radius: 'â\x89\x88â\x80\x898',
+        //     mass: 'â\x89\x88â\x80\x890.27'
+        // },
+        // {
+        //     name: 'â\x99£Greip',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£Mundilfari',
+        //     radius: 'â\x89\x88â\x80\x897',
+        //     mass: 'â\x89\x88â\x80\x890.18'
+        // },
+        // {
+        //     name: 'â\x99£S/2006 S\n                        1',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£S/2007 S\n                        3',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 20',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£Bergelmir',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£Narvi',
+        //     radius: 'â\x89\x88â\x80\x897',
+        //     mass: 'â\x89\x88â\x80\x890.18'
+        // },
+        // {
+        //     name: 'â\x99£Jarnsaxa',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        17',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£Suttungr',
+        //     radius: 'â\x89\x88â\x80\x897',
+        //     mass: 'â\x89\x88â\x80\x890.18'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 27',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£Hati',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        12',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£Bestla',
+        //     radius: 'â\x89\x88â\x80\x897',
+        //     mass: 'â\x89\x88â\x80\x890.18'
+        // },
+        // {
+        //     name: 'â\x99£Farbauti',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£Thrymr',
+        //     radius: 'â\x89\x88â\x80\x898',
+        //     mass: 'â\x89\x88â\x80\x890.27'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 22',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 30',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99£Aegir',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 25',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        7',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 32',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 23',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        28',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 35',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£Kari',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 38',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£S/2006 S\n                        3',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£Fenrir',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£Surtur',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£Loge',
+        //     radius: 'â\x89\x88â\x80\x895',
+        //     mass: 'â\x89\x88â\x80\x890.065'
+        // },
+        // {
+        //     name: 'â\x99£Ymir',
+        //     radius: 'â\x89\x88â\x80\x8919',
+        //     mass: 'â\x89\x88â\x80\x893.6'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        21',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        39',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99¦S/2004 S\n                        24',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S\n                        36',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 33',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 34',
+        //     radius: 'â\x89\x88â\x80\x893',
+        //     mass: 'â\x89\x88â\x80\x890.014'
+        // },
+        // {
+        //     name: 'â\x99£Fornjot',
+        //     radius: 'â\x89\x88â\x80\x896',
+        //     mass: 'â\x89\x88â\x80\x890.11'
+        // },
+        // {
+        //     name: 'â\x99£S/2004 S 26',
+        //     radius: 'â\x89\x88â\x80\x894',
+        //     mass: 'â\x89\x88â\x80\x890.034'
+        // },
+    ],
 }
 export const uranus = {
     name : `Uranus`,
