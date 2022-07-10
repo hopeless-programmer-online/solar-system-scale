@@ -60,23 +60,19 @@ export const jupiter = {
     mass : 1.8982e27,
     obliquity : radians(3.13),
     rings : [
-        {
-            name : `Halo Ring`,
+        {   name : `Halo Ring`,
             radius : 92_000,
             width : 30_000,
         },
-        {
-            name : `Main Ring`,
+        {   name : `Main Ring`,
             radius : 122_500,
             width : 6_500,
         },
-        // {
-        //     name : `Amalthea gossamer Ring`,
+        // {   name : `Amalthea gossamer Ring`,
         //     radius : 129_000,
         //     width : 53_000,
         // },
-        // {
-        //     name : `Thebe gossamer Ring`,
+        // {   name : `Thebe gossamer Ring`,
         //     radius : 129_000,
         //     width : 97_000,
         // },
@@ -491,58 +487,47 @@ export const saturn = {
     mass : 5.6834e26,
     obliquity : radians(26.73),
     rings : [
-        {
-            name : `D Ring`,
+        {   name : `D Ring`,
             radius : 66_900,
             width : 7_500,
         },
-        {
-            name : `C Ring`,
+        {   name : `C Ring`,
             radius : 74_658,
             width : 17_500,
         },
-        {
-            name : `B Ring`,
+        {   name : `B Ring`,
             radius : 92_000,
             width : 25_500,
         },
-        {
-            name : `A Ring`,
+        {   name : `A Ring`,
             radius : 122_170,
             width : 14_600,
         },
-        {
-            name : `F Ring`,
+        {   name : `F Ring`,
             radius : 140_180,
             width : 500,
         },
-        {
-            name : `Janus/Epimetheus Ring`,
+        {   name : `Janus/Epimetheus Ring`,
             radius : 149_000,
             width : 5_000,
         },
-        {
-            name : `G Ring`,
+        {   name : `G Ring`,
             radius : 166_000,
             width : 9_000,
         },
-        {
-            name : `Methone Ring Arc`,
+        {   name : `Methone Ring Arc`,
             radius : 194_230,
             width : 1_000,
         },
-        {
-            name : `Anthe Ring Arc`,
+        {   name : `Anthe Ring Arc`,
             radius : 197_655,
             width : 1_000,
         },
-        {
-            name : `Pallene Ring`,
+        {   name : `Pallene Ring`,
             radius : 211_000,
             width : 2_500,
         },
-        // {
-        //     name : `E Ring`,
+        // {   name : `E Ring`,
         //     radius : 180_000,
         //     width : 300_000,
         // },
