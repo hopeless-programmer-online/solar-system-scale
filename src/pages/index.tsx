@@ -29,74 +29,6 @@ export default class IndexPage extends React.Component<Props, State> {
         planets : arrangeLeftToRight(system.planets),
     }
 
-    private handleMouseDown = (event : React.MouseEvent<SVGSVGElement>) => {
-        const { view : v } = this.state
-        const vwh = v.width / v.height
-        const { left : rl, top : rt, width : rw, height : rh } = event.currentTarget.getBoundingClientRect()
-        const rwh = rw / rh
-
-        const $t = ({ clientX, clientY } : { clientX : number, clientY : number }) => {
-            if (rwh >= vwh) {
-                const q = (rwh - vwh) / 2 / rwh
-
-                const w = rw * (vwh / rwh)
-                const l = rl + rw * q
-                const x = (clientX - l) / w * v.width + v.left
-
-                const h = rh
-                const t = rt
-                const y = (clientY - t) / h * v.height + v.top
-
-                return { x, y }
-            }
-            else {
-                const q = (1 / rwh - 1 / vwh) / 2 / (1 / rwh)
-
-                console.log(q)
-
-                const w = rw
-                const l = rl
-                const x = (clientX - l) / w * v.width + v.left
-
-                const h = rh * ((1 / vwh) / (1 / rwh))
-                const t = rt + rh * q
-                const y = (clientY - t) / h * v.height + v.top
-
-                return { x, y }
-            }
-        }
-
-        let { x : ox, y : oy } = $t(event)
-
-        const handleMouseUp = () => {
-            window.removeEventListener(`mouseup`, handleMouseUp)
-            window.removeEventListener(`mousemove`, handleMouseMove)
-        }
-        const handleMouseMove = (event : MouseEvent) => {
-            const { x : nx, y : ny } = $t(event)
-            const dx = nx - ox
-            const dy = ny - oy
-            const { view : v } = this.state
-
-            this.setState({ view : {
-                ...v,
-                left : v.left - dx,
-                top : v.top - dy,
-            } })
-
-            // console.log({ dx, dy })
-
-            ox = nx
-            oy = ny
-        }
-
-        window.addEventListener(`mouseup`, handleMouseUp)
-        window.addEventListener(`mousemove`, handleMouseMove)
-    }
-    private handleWheel = (event : React.WheelEvent<SVGSVGElement>) => {
-        //
-    }
-
     public render() {
         const { view } = this.state
         const { star, planets } = this.system
@@ -134,8 +66,6 @@ export default class IndexPage extends React.Component<Props, State> {
                 <SvgView
                     className={styles.map}
                     viewBox={`${view.left} ${view.top} ${scaleX * width} ${scaleY * height}`}
-                    // onMouseDown={this.handleMouseDown}
-                    // onWheel={this.handleWheel}
                     preserveAspectRatio={`xMidYMid meet`}
                 >
                     <StarComponent id={`sun`} star={star} transformation={$t}/>
@@ -412,8 +342,8 @@ function findBoundaries<Something extends (Celestial | Planet) & Positioned>(som
         boundaries : {
             left   : x + Math.min(lt.x, lb.x, rt.x, rb.x),
             right  : x + Math.max(lt.x, lb.x, rt.x, rb.x),
-            top    : y + Math.min(lt.y, lb.y, rt.y, rb.y),
-            bottom : y + Math.max(lt.y, lb.y, rt.y, rb.y),
+            top    : y - height, // y + Math.min(lt.y, lb.y, rt.y, rb.y),
+            bottom : y + height, // y + Math.max(lt.y, lb.y, rt.y, rb.y),
         },
     }
 }
