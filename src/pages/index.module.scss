@@ -32,7 +32,7 @@ svg.map {
         }
         &.moonName {
             text-anchor: start;
-            dominant-baseline: text-before-edge;
+            dominant-baseline: central;
             fill: black;
         }
     }

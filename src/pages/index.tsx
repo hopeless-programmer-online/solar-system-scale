@@ -177,7 +177,7 @@ class PlanetComponent extends React.Component<{ planet : Planet & Positioned & B
                 </text> */}
             </>
         )
-        const arrangedMoons = moons && arrangeTopToBottom(moons, { x, y : boundaries.bottom + planet.radius / 2 })
+        const arrangedMoons = moons && arrangeTopToBottom(moons, { x, y : boundaries.bottom + planet.radius * 0.6 })
 
         return (
             <>
@@ -362,18 +362,16 @@ function minMaxBoundaries(boundaries : { boundaries : Boundaries }[]) : Boundari
 }
 function arrangeLeftToRight<Something extends Celestial | Planet>(somethings : Something[], gapFactor = 0.05) {
     const bounded = somethings.map(x => place(x, { x : 0, y : 0 })).map(findBoundaries)
-    // find max radius (gap depends on it)
-    const max = bounded.reduce((max, { boundaries : { left, right } }) => Math.max(max, right - left), -Infinity)
-    const gap = max * gapFactor
     // find total planets set width (gap included)
-    const width = bounded.reduce((width, { boundaries : { left, right } }) => width + (right - left), 0) + (bounded.length - 1) * gap
+    let width = bounded.reduce((width, { boundaries : { left, right } }) => width + (right - left) * (1 + gapFactor), 0)
 
     let left = -width / 2
 
     return bounded.map((planet, i) => {
         const { boundaries } = planet
         const width = boundaries.right - boundaries.left
-        const x = left + width / 2
+        const gap = width * gapFactor
+        const x = left + width / 2 + gap / 2
         const y = 0
 
         left += width + gap
@@ -384,22 +382,20 @@ function arrangeLeftToRight<Something extends Celestial | Planet>(somethings : S
 function arrangeTopToBottom<Something extends Celestial | Planet>(
     somethings : Something[],
     offset : Position = { x : 0, y : 0 },
-    gapFactor = 0.05
+    gapFactor = 0.1
 ) {
     const bounded = somethings.map(x => place(x, { x : 0, y : 0 })).map(findBoundaries)
-    // find max radius (gap depends on it)
-    const max = bounded.reduce((max, { boundaries : { top, bottom } }) => Math.max(max, bottom - top), -Infinity)
-    const gap = max * gapFactor
     // find total planets set height (gap included)
-    const height = bounded.reduce((height, { boundaries : { top, bottom } }) => height + (bottom - top), 0) + (bounded.length - 1) * gap
+    const height = bounded.reduce((height, { boundaries : { top, bottom } }) => height + (bottom - top) * (1 + gapFactor), 0)
 
     let top = 0
 
     return bounded.map((planet, i) => {
         const { boundaries } = planet
         const height = boundaries.bottom - boundaries.top
+        const gap = height * gapFactor
         const x = offset.x + 0
-        const y = offset.y + top + height / 2
+        const y = offset.y + top + height / 2 + gap / 2
 
         top += height + gap
 
