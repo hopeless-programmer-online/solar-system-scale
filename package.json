@@ -1,6 +1,6 @@
 {
   "name": "solar-system-scale",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Size comparison of celestial bodies in solar system.",
   "scripts": {
     "build": "next build",
